@@ -1,0 +1,73 @@
+---------------------------------------------
+
+Como gerar .params e .mdl no windows:
+
+1.Para transformar de .PDB para .mdl utilizo o babel e uso o seguinte comando no cmd do windows: 
+No cmd do Windows:
+>babel liganteAH1.pdb -omdl -O ligand.mdl
+
+2.Após gerar o .mdl utilizo o ubuntu para o proximo comando. Para transformar .mdl em .pdb(final) e .params, deve-se utilizar o 
+código "molfile_to_params.py" do pyrosetta através do seguinte comando
+No ubuntu:
+>molfile_to_params.py ligand.mdl -n AH1
+
+-------------------------------------------------------------
+
+Para utilizar o Pymolmover e vizualizar os passos de cada modificação:
+
+No pymol, na parte de comandos superior:
+1.Chegar no diretorio correto através de comendo "cd"
+2.Escrever o seguinte comando:"run PyMOL-RosettaServer.python3.py"
+3.Após isso o pymol esta apto a receber a molécula de qualquer programa. 
+4.Para isso deve-se instanciar no começo do codigo:"pymover(nome qualquer para o mover) = PyMOLMover()"
+5.Então, toda vez que deseja-se atualizar a visualização coloque:"pymover.apply(pose1(nome qualquer para o pose))"
+
+--------------------------------------------------------------
+
+Rotação e Translação de corpo rígido:
+
+#Variáveis utilizadas
+#axis = BodyPosition.xyzVector_double_t(0.0,-1.0,0.0)
+#setup_foldtree(pose1,"AB_X",Vector1([1]))
+#jump_num = 1
+
+#Rotação de corpo rígido:
+#*************************
+#    spin_mover=rigid_moves.RigidBodyDeterministicSpinMover()     			//cria o mover de rotação 
+#    spin_mover.rb_jump(jump_num)				  			//define o jump para 1
+#    spin_mover.spin_axis(axis)					  			//define o vetor de rotação
+#    spin_mover.rot_center(pyrosetta.rosetta.core.pose.get_center_of_mass(pose1))	//define como centro de rotação o centro de massa do ligante
+#    spin_mover.angle_magnitude(2)							//define uma magnitude para a rotação
+#    spin_mover.apply(pose1)								//aplica todo o mover contruido em no pose que se deseja rotacionar
+#    pymover.apply(pose1)								//aplica este movimento ao pymol para vizualização
+#*************************
+
+
+#Translação de corpo rígido:
+#*****************************
+#   trans_mover = rigid_moves.RigidBodyTransMover(pose1,jump_num)			//cria o mover de translação
+#   trans_mover.trans_axis(axis)							//define um vetor para translação 
+#   trans_mover.step_size(1)								//define um tamanho para a translação
+#   trans_mover.apply(pose1)								//aplica o mover ao pose
+#   pymover.apply(pose1)								//aplica o movimento do pose ao pymol
+#*****************************
+
+-------------------------------------------------
+
+Calculo de energia de um ligante:
+
+sfxn = create_score_function('ligand')							//cria uma função especifica para ligantes(função de energia padrão do pyrosetta não serve)
+sfxn(pose1)										//aplica a funçaõ de energia em um pose								
+sfxn.show(pose1)									//mostra todos os valores das diferentes energias
+
+--------------------------------------------------
+Sites muito importantes:
+https://graylab.jhu.edu/PyRosetta.documentation/					//toda a documantação e todas as funções do pyrosetta utilizada nos "imports"
+https://rosettacommons.github.io/PyRosetta.notebooks/					//todos os tutoriais do pyrosetta
+https://new.rosettacommons.org/docs/latest/full-options-list				//documentação do Rosetta, não muito importante
+http://www.pyrosetta.org/scripts#TOC-Sample-Scripts					//códigos prontos de algumas funcionalidades
+https://graylab.jhu.edu/pyrosetta/downloads/scripts/demo/D100_Docking.py		//codigo interressante
+https://graylab.jhu.edu/pyrosetta/downloads/scripts/demo/D120_Ligand_interface.py	//codigo interessante
+https://cupnet.net/pdb-format/								//como funciona o formato PDB(muito importante)
+https://www.rcsb.org/									//banco de dados para baixar PDBs
+--------------------------------------------------
